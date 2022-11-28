@@ -15,10 +15,22 @@ if (-not(IsElevated))  {
 
 ########## AS_W_01 ##########
 # Audit Success Process Creation event
-Write-Host ""
-Write-Host "[*] Checking auditing policy" -ForegroundColor Gray
-Write-Host ""
-auditpol /get /category:"Detailed Tracking" /subcategory:"Process Creation"
+Write-Host "[*] Checking Detailed Tracking" -ForegroundColor Green
+Write-Host "-----------------------------------------------------"
+
+auditpol /get /category:'Detailed Tracking' /r | ConvertFrom-Csv | Format-Table -AutoSize 'Subcategory', @{
+    Label      = 'Inclusion Setting'
+    Expression = {
+        switch ($_.'Inclusion Setting') {
+            'No Auditing' { $color = "5;31"; break }
+            'Success and Failure' { $color = '32'; break }
+            'Success' { $color = "33"; break }
+            default { $color = "0" }
+        }
+        $e = [char]27
+        "$e[${color}m$($_.'Inclusion Setting')${e}[0m"
+    }
+}
 
 ########## AS_W_02 ##########
 # Include command line in process creation events
