@@ -1,4 +1,4 @@
-if (-Not ([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match "S-1-5-32    -544")) {
+if (-Not ([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match "S-1-5-32-544")) {
     Write-Host "Not running as Administrator!!"
     return    
 }
